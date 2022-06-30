@@ -5,6 +5,7 @@ import (
 	"math"
 	"strconv"
 	"time"
+	"github.com/google/uuid"
 )
 
 func main() {
@@ -23,6 +24,9 @@ func main() {
 	fmt.Println(math.Pi)
 	fmt.Println(current_time.Format(format_date))
 	fmt.Println(next_dates.Format(format_date))
+
+	uuidWithHyphen := uuid.New()
+    fmt.Println(uuidWithHyphen)
 
 	//Floyd's triangle
 	var rows int
