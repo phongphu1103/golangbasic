@@ -15,20 +15,40 @@ func main() {
 	fmt.Println(str + "\n")
 	fmt.Println(leng)
 
+	// handle time
 	local, err := time.LoadLocation("Asia/Saigon")
 	if err != nil {
 		fmt.Println(err)
 	}
-	current_time := time.Now().In(local)
-	next_dates := current_time.AddDate(0, 0, 6)
+	ctime := time.Now().In(local)
+	next_dates := ctime.AddDate(0, 0, 6)
 	fmt.Println(math.Pi)
-	fmt.Println(current_time.Format(format_date))
+	fmt.Println(ctime.Format(format_date))
+	fmt.Println(ctime.UnixMilli())
 	fmt.Println(next_dates.Format(format_date))
+
+	// example day in week
+	fmt.Println(ctime.Weekday())
+	switch ctime.Weekday() {
+	case time.Saturday, time.Sunday:
+		fmt.Println("It's weekend")
+	default:
+		fmt.Println("It's weekday")
+	}
+
+	// example hour in day
+	fmt.Println(ctime)
+	switch {
+	case ctime.Hour() < 12:
+		fmt.Println("It's before noon")
+	default:
+		fmt.Println("It's after noon")
+	}
 
 	uuidWithHyphen := uuid.New()
     fmt.Println(uuidWithHyphen)
 
-	//Floyd's triangle
+	// Floyd's triangle
 	var rows int
 	t := 1
 
@@ -79,4 +99,9 @@ func main() {
 		fmt.Print(" ", nextTerm)
 	}
 
+	fmt.Println()
+	kvs := map[string]string{"first_name": "Vinicius", "last_name": "Junior"}
+    for k, v := range kvs {
+        fmt.Printf("%s -> %s\n", k, v)
+    }
 }
