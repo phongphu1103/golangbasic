@@ -12,7 +12,7 @@ func main() {
 	format_date := "2006-01-02"
 	str := "Black Panther"
 	leng := len(str)
-	fmt.Println(str + "\n")
+	fmt.Println(str)
 	fmt.Println(leng)
 
 	// handle time
