@@ -62,14 +62,13 @@ func main() {
 		answer = strings.TrimRight(answer, "\n")
 	}
 
-	if strings.toLower(answer) == "y" || strings.toLower(answer) == "yes" {
+	if strings.ToLower(answer) == "y" || strings.ToLower(answer) == "yes" {
 		args = []string{"i"}
 		out, errout, abort = executeCommand("npm", args, home_dev_path)
 		consoleLog(out, errout, abort)
 	}
 
 	fmt.Println("Update what will be committed")
-
 	// run git add .
 	args = []string{"add", "."}
 	out, errout, abort = executeCommand("git", args, home_dev_path)
@@ -94,28 +93,24 @@ func main() {
 	consoleLog(out, errout, abort)
 
 	fmt.Println("Pull branch ft/new-recruit to dev/main2")
-
 	// run git pull
 	args = []string{"pull", "origin", "ft/new-recruit"}
 	out, errout, abort = executeCommand("git", args, home_dev_path)
 	consoleLog(out, errout, abort)
 
 	fmt.Println("Push branch dev/main2")
-	
 	// run git push
 	args = []string{"push", "origin", "dev/main2"}
 	out, errout, abort = executeCommand("git", args, home_dev_path)
 	consoleLog(out, errout, abort)
 
 	fmt.Println("Switch branch master2")
-
 	// run git checkout master2
 	args = []string{"checkout", "master2"}
 	out, errout, abort = executeCommand("git", args, home_dev_path)
 	consoleLog(out, errout, abort)
 
 	fmt.Println("Pull branch dev/main2 to master2")
-
 	// run git pull
 	args = []string{"pull", "origin", "dev/main2"}
 	out, errout, abort = executeCommand("git", args, home_dev_path)
