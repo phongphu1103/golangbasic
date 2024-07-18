@@ -75,7 +75,7 @@ func main() {
 	consoleLog(out, errout, abort)
 
 	// run git commit
-	args = []string{"commit", "-m", "'update recruit'"}
+	args = []string{"commit", "-m", "update recruit"}
 	out, errout, abort = executeCommand("git", args, home_dev_path)
 	consoleLog(out, errout, abort)
 
