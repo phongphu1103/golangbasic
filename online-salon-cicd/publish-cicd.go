@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"path/filepath"
 
 	"github.com/joho/godotenv"
@@ -12,6 +13,7 @@ import (
 
 /* global variable declaration */
 var frontend_folder string
+var theme_publish_path string
 var publish_path string
 
 func executeCommand(tool string, args []string, path string) (string, string, bool) {
@@ -38,8 +40,6 @@ func consoleLog(out string, errout string, abort bool) {
 }
 
 func mergeToBranchPublish() {
-	theme_publish_path := os.Getenv("THEME_PUBLISH_PATH")
-
 	frontend_publish_path := filepath.Join(theme_publish_path, frontend_folder)
 	fmt.Println(frontend_publish_path)
 
@@ -89,6 +89,31 @@ func mergeToBranchTest() {
 	mergeToBranch("test")
 }
 
+func buildBranchTest() {
+	var convention string
+	var tool string
+	if runtime.GOOS == "windows" {
+		convention = "cmd.exe"
+		tool = "copy"
+	} else {
+		convention = "bash"
+		tool = "cp"
+	}
+
+	resource_path := os.Getenv("ENV_RESOURCE_PATH")
+	source_path := filepath.Join(resource_path, frontend_folder, "env.backup.test")
+	destination_path := filepath.Join(theme_publish_path, frontend_folder, ".env")
+
+	args := []string{}
+	args = append(args, "/c")
+	args = append(args, tool)
+	args = append(args, source_path)
+	args = append(args, destination_path)
+
+	out, errout, abort := executeCommand(convention, args, publish_path)
+	consoleLog(out, errout, abort)
+}
+
 func mergeToBranchStaging() {
 	branch_name := "staging/" + frontend_folder
 	mergeToBranch(branch_name)
@@ -106,9 +131,15 @@ func mergeToBranch(branch_name string) {
 	out, errout, abort := executeCommand("git", args, publish_path)
 	consoleLog(out, errout, abort)
 
-	fmt.Println("Pull branch publish2 to %s", branch_name)
+	fmt.Printf("Pull branch publish2 to %s", branch_name)
 	// run git pull
 	args = []string{"pull", "origin", "publish2"}
+	out, errout, abort = executeCommand("git", args, publish_path)
+	consoleLog(out, errout, abort)
+
+	fmt.Printf("Push branch %s", branch_name)
+	// run git push
+	args = []string{"push", "origin", branch_name}
 	out, errout, abort = executeCommand("git", args, publish_path)
 	consoleLog(out, errout, abort)
 }
@@ -139,13 +170,15 @@ func main() {
 	}
 
 	publish_path = os.Getenv("PUBLISH_PATH")
+	theme_publish_path = os.Getenv("THEME_PUBLISH_PATH")
 
 	for {
 		fmt.Println("Select step:")
 		fmt.Println("1. Merge to branch publish2")
 		fmt.Println("2. Merge to branch test")
-		fmt.Println("3. Merge to branch staging")
-		fmt.Println("4. Merge to branch release")
+		fmt.Println("3. Build branch test")
+		fmt.Println("4. Merge to branch staging")
+		fmt.Println("5. Merge to branch release")
 		fmt.Println("0. Exit")
 		fmt.Print("Your select: ")
 		fmt.Scanf("%d\n", &step)
@@ -158,8 +191,10 @@ func main() {
 			case 2:
 				mergeToBranchTest()
 			case 3:
-				mergeToBranchStaging()
+				buildBranchTest()
 			case 4:
+				mergeToBranchStaging()
+			case 5:
 				mergeToBranchRelease()
 			default:
 				fmt.Println("def")
